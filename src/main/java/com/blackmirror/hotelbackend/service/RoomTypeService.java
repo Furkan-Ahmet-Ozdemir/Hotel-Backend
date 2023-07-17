@@ -12,18 +12,15 @@ import java.util.Optional;
 public class RoomTypeService {
 
     @Autowired
-    RoomTypeRepository roomTypeRepository;
+    private RoomTypeRepository roomTypeRepository;
 
     public List<RoomType> listAll(){
         return roomTypeRepository.findAll();
     }
 
     public Optional<RoomType> getById(Long id){
-
         Optional<RoomType> roomType = roomTypeRepository.findById(id);
-
         return roomType;
-
     }
 
     public RoomType createRoomType(RoomType roomType){

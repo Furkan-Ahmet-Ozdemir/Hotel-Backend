@@ -11,13 +11,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
+//    @ResponseBody
+//    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
+//    @ExceptionHandler(RecordNotFoundException.class)
+//    public ResponseEntity<DefaultExceptionMessage> recordNotFoundException(RecordNotFoundException e) {
+//        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+//        dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
+//        dex.setMessage("Record Not Found");
+//        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
+//    }
+
     @ResponseBody
     @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
     @ExceptionHandler(GuestNotFoundException.class)
-    public ResponseEntity<DefaultExceptionMessage> recordNotFoundException(GuestNotFoundException e) {
+    public ResponseEntity<DefaultExceptionMessage> guestNotFoundException(GuestNotFoundException e) {
         DefaultExceptionMessage dex = new DefaultExceptionMessage();
         dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
-        dex.setMessage("NotFound");
+        dex.setMessage("Guest Not Found");
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
     }
+
+
+
+
+
+
+
+
 }

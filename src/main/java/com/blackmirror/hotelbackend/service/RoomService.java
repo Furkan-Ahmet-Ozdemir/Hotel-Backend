@@ -13,7 +13,7 @@ import java.util.List;
 public class RoomService {
 
     @Autowired
-    RoomRepository roomRepository;
+    private RoomRepository roomRepository;
 
     public List<Room> listAll(){
         return  roomRepository.findAll();
