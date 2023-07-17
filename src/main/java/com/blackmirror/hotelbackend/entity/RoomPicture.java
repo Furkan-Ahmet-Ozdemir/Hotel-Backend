@@ -16,8 +16,9 @@ public class RoomPicture {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @ManyToOne
-    private RoomType roomType;
+//    @ManyToOne
+//    @JoinColumn(name = "roomTypeId")
+//    private RoomType roomType;
 
     private String picturePath;
 }

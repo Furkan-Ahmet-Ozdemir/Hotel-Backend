@@ -15,7 +15,8 @@ import java.util.List;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+
     private Date checkInDate;
     private Date checkOutDate;
     private long totalPrice;
@@ -24,13 +25,19 @@ public class Reservation {
     private int customerCount;
 
     @OneToMany
-    @JoinColumn(name = "guestId")
+    @JoinColumn(name = "guestList")
     private List<Guest> guestList;
 
     @OneToMany
     @JoinColumn(name = "roomList")
     private List<Room> roomList;
 
+    @OneToOne
+    @JoinColumn(name = "invoiceGuestId")
+    private InvoiceGuest invoiceGuest;
+
     private boolean status = false;
+
+    private String reservationCode;
 
 }

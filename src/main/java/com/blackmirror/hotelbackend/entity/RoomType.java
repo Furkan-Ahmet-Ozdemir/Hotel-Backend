@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,7 +23,12 @@ public class RoomType {
 
     private int guestLimit;
 
-    private String information;
+    private String description;
 
     private String mainPicturePath;
+
+    @OneToMany
+    @JoinColumn(name = "roomPictureList")
+    private List<RoomPicture> roomPictureList;
+
 }
