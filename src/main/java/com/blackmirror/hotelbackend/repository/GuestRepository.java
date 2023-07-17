@@ -4,4 +4,5 @@ import com.blackmirror.hotelbackend.entity.Guest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GuestRepository extends JpaRepository<Guest,Long> {
+    public Long countById(Long id);
 }
