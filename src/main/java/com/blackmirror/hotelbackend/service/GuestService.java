@@ -29,13 +29,13 @@ public class GuestService {
         if (result.isPresent()){
             return result.get();
         }
-        throw new GuestNotFoundException("Couldn find any Guest with ID "+ id);
+        throw new GuestNotFoundException();
     }
 
     public void delete(Long id) throws GuestNotFoundException {
         Long count = guestRepository.countById(id);
         if (count == null || count==0){
-            throw new RecordNotFoundException();
+            throw new GuestNotFoundException();
         }
             guestRepository.deleteById(id);
     }

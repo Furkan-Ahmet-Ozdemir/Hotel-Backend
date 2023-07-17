@@ -13,8 +13,8 @@ public class ControllerExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
-    @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<DefaultExceptionMessage> recordNotFoundException(RecordNotFoundException e) {
+    @ExceptionHandler(GuestNotFoundException.class)
+    public ResponseEntity<DefaultExceptionMessage> recordNotFoundException(GuestNotFoundException e) {
         DefaultExceptionMessage dex = new DefaultExceptionMessage();
         dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
         dex.setMessage("NotFound");

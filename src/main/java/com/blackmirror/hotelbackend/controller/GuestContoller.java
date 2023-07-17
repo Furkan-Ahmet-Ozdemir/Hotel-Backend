@@ -31,16 +31,10 @@ public class GuestContoller {
 
      //User Id si ile silme işlmei yapıyorum
     @GetMapping("/guests/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id,RedirectAttributes ra){
-        try {
-            guestService.delete(id);
-            ra.addFlashAttribute("message","The User ID "+id+" has been deleted.");
+    public String deleteUser(@PathVariable("id") Long id,RedirectAttributes ra) throws GuestNotFoundException {
 
-        } catch (GuestNotFoundException e) {
-            ra.addFlashAttribute("message",e.getMessage());
-            String error = e.getMessage();
-            System.out.println(error);
-        }
+            guestService.delete(id);
+
         return "test";
     }
 
