@@ -2,6 +2,7 @@ package com.blackmirror.hotelbackend.service;
 
 import com.blackmirror.hotelbackend.entity.Guest;
 import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
+import com.blackmirror.hotelbackend.exception.RecordNotFoundException;
 import com.blackmirror.hotelbackend.repository.GuestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class GuestService {
     public void delete(Long id) throws GuestNotFoundException {
         Long count = guestRepository.countById(id);
         if (count == null || count==0){
-            throw new GuestNotFoundException("Couldn find any Guest with ID "+ id);
+            throw new RecordNotFoundException();
         }
             guestRepository.deleteById(id);
     }

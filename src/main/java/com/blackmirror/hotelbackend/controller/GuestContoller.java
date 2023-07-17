@@ -1,13 +1,11 @@
 package com.blackmirror.hotelbackend.controller;
 
 import com.blackmirror.hotelbackend.entity.Guest;
+import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
 import com.blackmirror.hotelbackend.service.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -29,6 +27,21 @@ public class GuestContoller {
         Guest guest1 = guestService.save(guest);
         System.out.println("----------"+guest1+"----------------");
         return guest1;
+    }
+
+     //User Id si ile silme işlmei yapıyorum
+    @GetMapping("/guests/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id,RedirectAttributes ra){
+        try {
+            guestService.delete(id);
+            ra.addFlashAttribute("message","The User ID "+id+" has been deleted.");
+
+        } catch (GuestNotFoundException e) {
+            ra.addFlashAttribute("message",e.getMessage());
+            String error = e.getMessage();
+            System.out.println(error);
+        }
+        return "test";
     }
 
 
