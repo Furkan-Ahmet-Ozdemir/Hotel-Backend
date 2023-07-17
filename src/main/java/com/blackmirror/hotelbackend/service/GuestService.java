@@ -24,6 +24,13 @@ public class GuestService {
         return guest;
     }
 
+    public List<Guest> save(List<Guest> guests) {
+        for (Guest guest: guests) {
+            guestRepository.save(guest);
+        }
+        return guests;
+    }
+
     public Guest get(Long id) throws GuestNotFoundException {
         Optional<Guest> result = guestRepository.findById(id);
         if (result.isPresent()){

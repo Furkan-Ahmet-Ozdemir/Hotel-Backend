@@ -32,6 +32,17 @@ public class ControllerExceptionHandler {
     }
 
 
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<DefaultExceptionMessage> reservationNotFoundException(ReservationNotFoundException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
+        dex.setMessage("Reservation Not Found");
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
+    }
+
+
 
 
 
