@@ -17,10 +17,8 @@ public class Guest{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     public long id;
-
     public String name;
     public String surName;
-
     private Gender gender;
     private Date birthDate;
     private long reservationId;
