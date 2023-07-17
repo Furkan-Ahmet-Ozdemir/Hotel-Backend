@@ -26,5 +26,9 @@ public class RoomTypeService {
     public RoomType createRoomType(RoomType roomType){
         return roomTypeRepository.save(roomType);
     }
+    public List<RoomType> getRoomTypeListByIdsGuestCount(List<Long> idList,Integer guestCount)
+    {
+        return roomTypeRepository.findByIdInAndGuestLimitGreaterThanEqual(idList,guestCount);
+    }
 
 }

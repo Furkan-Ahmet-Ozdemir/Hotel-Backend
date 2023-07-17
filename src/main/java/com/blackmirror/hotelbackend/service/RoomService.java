@@ -23,4 +23,12 @@ public class RoomService {
         return roomRepository.save(roomToCreate);
     }
 
+    public List<String> getAllRoomNumbers(){
+        return roomRepository.getAllRoomNumbers();
+    }
+
+    public List<Object[]> getGroupedRoomTypes(List<String> roomNumberList){
+        return roomRepository.findRoomTypeIdsByRoomNumbers(roomNumberList);
+    }
+
 }

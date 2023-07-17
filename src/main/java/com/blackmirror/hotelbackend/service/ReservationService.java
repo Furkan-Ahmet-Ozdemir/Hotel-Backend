@@ -2,6 +2,7 @@ package com.blackmirror.hotelbackend.service;
 
 import com.blackmirror.hotelbackend.entity.Guest;
 import com.blackmirror.hotelbackend.entity.Reservation;
+import com.blackmirror.hotelbackend.entity.Room;
 import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
 import com.blackmirror.hotelbackend.exception.ReservationNotFoundException;
 import com.blackmirror.hotelbackend.repository.GuestRepository;
@@ -9,8 +10,9 @@ import com.blackmirror.hotelbackend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static com.blackmirror.hotelbackend.utils.GetDateDayDifference.getDateDayDifference;
 
 @Service
 public class ReservationService {
@@ -48,5 +50,28 @@ public class ReservationService {
             return result.get();
         }
         throw new ReservationNotFoundException();
+    }
+    public List<String> getFullRoomNumbers(Date checkInDate, Date checkOutDate){
+        long daysBetween = getDateDayDifference(checkInDate, checkOutDate);
+        Calendar c = Calendar.getInstance();
+
+        List<String> roomList =  new ArrayList();
+        Date dateToTravel = checkInDate;
+
+        for(int i =0;i<daysBetween;i++){
+            List<Reservation> reservationTravel = reservationRepository.getReservationInRange(dateToTravel);
+            c.setTime(dateToTravel);
+            c.add(Calendar.DATE, 1);
+            dateToTravel = c.getTime();
+            
+            for(Reservation res: reservationTravel){
+                List<Room> rooms = res.getRoomList();
+                for (Room room:rooms)
+                {roomList.add(room.getRoomNumber());}
+            }
+
+        }
+
+        return roomList;
     }
 }
