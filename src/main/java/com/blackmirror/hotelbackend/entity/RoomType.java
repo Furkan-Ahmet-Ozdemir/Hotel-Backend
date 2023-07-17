@@ -17,14 +17,19 @@ public class RoomType {
     @Column(name = "id", nullable = false)
     public long id;
 
+    @Column(nullable = false, length = 50)
     private String roomName;
 
+    @Column(nullable = false, length = 10)
     private long price;
 
+    @Column(nullable = false, length = 2)
     private int guestLimit;
 
+    @Column(nullable = false, length = 255)
     private String description;
 
+    @Column(nullable = false)
     private String mainPicturePath;
 
     @OneToMany
