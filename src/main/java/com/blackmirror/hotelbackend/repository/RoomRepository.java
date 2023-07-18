@@ -14,4 +14,6 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     @Query("SELECT rt.id FROM Room r JOIN r.roomType rt WHERE r.roomNumber IN :roomNumbers GROUP BY rt.id")
     List<Object[]> findRoomTypeIdsByRoomNumbers(@Param("roomNumbers") List<String> roomNumbers);
+
+    Room findByRoomNumberAndRoomType_Id(String roomNumber, long roomTypeId);
 }

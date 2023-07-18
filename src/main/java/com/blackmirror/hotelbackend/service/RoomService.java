@@ -31,4 +31,7 @@ public class RoomService {
         return roomRepository.findRoomTypeIdsByRoomNumbers(roomNumberList);
     }
 
+    public Room getRoomByNumberAndTypeId(String roomNumber, long roomTypeId) {
+        return roomRepository.findByRoomNumberAndRoomType_Id(roomNumber, roomTypeId);
+    }
 }
