@@ -1,8 +1,10 @@
 package com.blackmirror.hotelbackend.controller;
 
 import com.blackmirror.hotelbackend.entity.Guest;
+import com.blackmirror.hotelbackend.entity.InvoiceGuest;
 import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
 import com.blackmirror.hotelbackend.service.GuestService;
+import com.blackmirror.hotelbackend.service.InvoiceGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ import java.util.List;
 public class GuestContoller {
     @Autowired
     private GuestService guestService;
+
+    @Autowired
+    private InvoiceGuestService invoiceGuestService;
 
     @GetMapping("/guests")
     public List<Guest> showUserList(Model model){
@@ -36,6 +41,18 @@ public class GuestContoller {
             guestService.delete(id);
 
         return "test";
+    }
+
+    @PostMapping("/invoiceguests/save")
+    public InvoiceGuest saveInvoiceguests(@RequestBody InvoiceGuest invoiceGuest){
+        InvoiceGuest invoiceGuest1 = invoiceGuestService.save(invoiceGuest);
+        System.out.println("----------"+invoiceGuest+"----------------");
+        return invoiceGuest1;
+    }
+
+    @GetMapping("/invoiceguests")
+    public List<InvoiceGuest> getAllInvoiceGuests(){
+        return invoiceGuestService.listAll();
     }
 
 

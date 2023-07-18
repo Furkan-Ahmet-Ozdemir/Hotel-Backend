@@ -16,19 +16,19 @@ public class InvoiceGuest {
     @Column(name = "id", nullable = false)
     public long id;
 
-    @Column(nullable = false,length = 100)
+//    @Column(nullable = false,length = 100)
     public String name;
 
-    @Column(nullable = false,length = 100)
+//    @Column(nullable = false,length = 100)
     public String surName;
 
-    @Column(nullable = false,length = 11)
+//    @Column(nullable = false,length = 11)
     private String tc;
 
-    @Column(nullable = false,length = 11)
+//    @Column(nullable = false,length = 11)
     private String email;
 
-    @Column(nullable = false,length = 13)
+//    @Column(nullable = false,length = 13)
     private String phoneNumber;
 
 }
