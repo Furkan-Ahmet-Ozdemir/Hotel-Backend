@@ -17,7 +17,7 @@ public class ReservationCreateRequest {
     private int customerCount;
     private long roomTypeId;
 
-    private List<Guest> guestList;
+    //private List<Guest> guestList;
 
     private InvoiceGuest invoiceGuest;
 }

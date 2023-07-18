@@ -48,7 +48,12 @@ public class ReservationController {
         reservation.setCheckInDate(reservationRequest.getCheckInDate());
         reservation.setCheckOutDate(reservationRequest.getCheckOutDate());
         reservation.setCustomerCount(reservationRequest.getCustomerCount());
-        reservation.setGuestList(reservationRequest.getGuestList());
+        // HANDLE GUESTS
+        // reservation.setGuestList(reservationRequest.getGuestList());
+        // guestService.save(reservationRequest.getGuestList());
+        List<Guest> guestList =guestService.listAll();
+        reservation.setGuestList(guestList);
+        ///HANDLE GUESTS ABOVE IS JUST PLACEHOLDER
         reservation.setInvoiceGuest(reservationRequest.getInvoiceGuest());
         List<Room> roomListToReservation =new ArrayList<>();
         List<Room> roomListAssignable = availableRoomsToAssignRoomtype(reservationRequest.getCheckInDate(),
@@ -57,7 +62,7 @@ public class ReservationController {
 
         reservation.setRoomList(roomListToReservation);
 
-        guestService.save(reservationRequest.getGuestList());
+
         invoiceGuestService.save(reservation.getInvoiceGuest());
         Reservation reservationRes = reservationService.save(reservation);
         return reservationRes;
