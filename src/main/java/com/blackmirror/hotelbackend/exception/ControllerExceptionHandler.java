@@ -2,6 +2,7 @@ package com.blackmirror.hotelbackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,10 +39,61 @@ public class ControllerExceptionHandler {
     public ResponseEntity<DefaultExceptionMessage> reservationNotFoundException(ReservationNotFoundException e) {
         DefaultExceptionMessage dex = new DefaultExceptionMessage();
         dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
+        dex.setCode(404);
         dex.setMessage("Reservation Not Found");
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
     }
 
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.EXPECTATION_FAILED)
+    @ExceptionHandler(NoAvailableRoomException.class)
+    public ResponseEntity<DefaultExceptionMessage> noAvailableRoomException(NoAvailableRoomException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.EXPECTATION_FAILED.value());
+        dex.setMessage("There is no available room.");
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
+    }
+
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
+    @ExceptionHandler(RequesFormatException.class)
+    public ResponseEntity<DefaultExceptionMessage> requestFormatException(RequesFormatException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
+        dex.setCode(405);
+        dex.setMessage("Request is not in expected format.");
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
+    }
+
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
+    @ExceptionHandler(DateFormatException.class)
+    public ResponseEntity<DefaultExceptionMessage> dateFormatException(DateFormatException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
+        dex.setMessage("Check given date format is not correct.");
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
+    }
+
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DateConflictException.class)
+    public ResponseEntity<DefaultExceptionMessage> dateConflictException(DateConflictException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.BAD_REQUEST.value());
+        dex.setMessage("Check given dates.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dex);
+    }
+
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<DefaultExceptionMessage> dateParseException(HttpMessageNotReadableException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.BAD_REQUEST.value());
+        dex.setMessage("Check given date format.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dex);
+    }
 
 
 

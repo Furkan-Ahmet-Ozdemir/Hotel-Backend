@@ -3,7 +3,10 @@ package com.blackmirror.hotelbackend.controller;
 import com.blackmirror.hotelbackend.dto.ReservationCreateRequest;
 import com.blackmirror.hotelbackend.dto.ReservationSearchRequest;
 import com.blackmirror.hotelbackend.entity.*;
+import com.blackmirror.hotelbackend.exception.DateConflictException;
+import com.blackmirror.hotelbackend.exception.DateFormatException;
 import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
+import com.blackmirror.hotelbackend.exception.NoAvailableRoomException;
 import com.blackmirror.hotelbackend.repository.GuestRepository;
 import com.blackmirror.hotelbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +48,14 @@ public class ReservationController {
 
     @PostMapping("/reservations/save")
     public Reservation saveReservations(@RequestBody ReservationCreateRequest reservationRequest){
-        ///** HANDLE RESERVATION CREATE **///
+
+
+        int dateCompRes = reservationRequest.getCheckInDate().compareTo(reservationRequest.getCheckOutDate());
+        if(dateCompRes > 0)
+            throw new DateConflictException();
+
+
+            ///** HANDLE RESERVATION CREATE **///
         Reservation reservation = new Reservation();
         reservation.setCheckInDate(reservationRequest.getCheckInDate());
         reservation.setCheckOutDate(reservationRequest.getCheckOutDate());
@@ -62,6 +72,8 @@ public class ReservationController {
         List<Room> roomListToReservation =new ArrayList<>();
         List<Room> roomListAssignable = availableRoomsToAssignRoomtype(reservationRequest.getCheckInDate(),
                 reservationRequest.getCheckOutDate(),reservationRequest.getRoomTypeId());
+        if(roomListAssignable.size()==0)
+            throw new NoAvailableRoomException();
         roomListToReservation.add(roomListAssignable.get(0));
 
         reservation.setRoomList(roomListToReservation);
@@ -75,6 +87,9 @@ public class ReservationController {
    @PostMapping("/reservations/search")
     public List<RoomType> queryReservation(@RequestBody ReservationSearchRequest searchRequest){
        //** May move to another layer **/
+        int dateCompRes = searchRequest.getCheckInDate().compareTo(searchRequest.getCheckOutDate());
+        if(dateCompRes > 0)
+            throw new DateConflictException();
 
         List<String> allRoomsListDistinct = getAvailableRooms(searchRequest.getCheckInDate(),searchRequest.getCheckOutDate());
 
@@ -84,8 +99,11 @@ public class ReservationController {
         for (int i=0;i<availableRoomTypes.size();i++){
             roomTypesToFetch.add((Long) availableRoomTypes.get(i)[0]);
         }
-       System.out.println(roomTypesToFetch);
+
+        //System.out.println(roomTypesToFetch);
         List<RoomType> result = roomTypeService.getRoomTypeListByIdsGuestCount(roomTypesToFetch,searchRequest.getCustomerCount());
+       if(result.size()==0)
+           throw new NoAvailableRoomException();
         return result;
 
 
