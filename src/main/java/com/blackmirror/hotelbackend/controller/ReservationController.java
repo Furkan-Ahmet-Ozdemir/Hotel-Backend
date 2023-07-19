@@ -4,17 +4,13 @@ import com.blackmirror.hotelbackend.dto.ReservationCreateRequest;
 import com.blackmirror.hotelbackend.dto.ReservationSearchRequest;
 import com.blackmirror.hotelbackend.entity.*;
 import com.blackmirror.hotelbackend.exception.DateConflictException;
-import com.blackmirror.hotelbackend.exception.DateFormatException;
-import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
 import com.blackmirror.hotelbackend.exception.NoAvailableRoomException;
-import com.blackmirror.hotelbackend.repository.GuestRepository;
 import com.blackmirror.hotelbackend.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.management.relation.RelationService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +20,7 @@ import static com.blackmirror.hotelbackend.utils.GeneratePNR.generateUniquePNR;
 
 
 @RestController
+@RequiredArgsConstructor
 public class ReservationController {
     @Autowired
     private ReservationService reservationService;
@@ -39,6 +36,10 @@ public class ReservationController {
 
     @Autowired
     private InvoiceGuestService invoiceGuestService;
+
+    @Autowired
+    private EmailSenderService senderService;
+
 
     @GetMapping("/reservations")
     public List<Reservation> showReservations(Model model){
@@ -80,7 +81,11 @@ public class ReservationController {
 
 
         invoiceGuestService.save(reservation.getInvoiceGuest());
+        sendMail(reservation.getInvoiceGuest().getEmail(),  "Reservation Code: "+reservation.getReservationCode()
+                ,"Rezervasyon kodunuz ile rezervasyon görme ve iptal etme işlemlerini sitemiz üzerinden yapabilirsiniz");
+
         Reservation reservationRes = reservationService.save(reservation);
+
         return reservationRes;
     }
 
@@ -105,8 +110,6 @@ public class ReservationController {
        if(result.size()==0)
            throw new NoAvailableRoomException();
         return result;
-
-
    }
 
     public List<String> getAvailableRooms(Date date1, Date date2){
@@ -121,9 +124,6 @@ public class ReservationController {
         List<Room> matchingRoom = new ArrayList<>();
         List<String> roomNumbers = getAvailableRooms(date1,date2);
 
-
-
-
         for (String roomNumber : roomNumbers) {
             Room room = roomService.getRoomByNumberAndTypeId(roomNumber, roomType);
             if (room != null) {
@@ -131,9 +131,19 @@ public class ReservationController {
             }
         }
 
-
-
-
         return matchingRoom;
     }
+
+    public void sendMail(String toEmail,String subject,String body) {
+//        senderService.sendSimpleEmail("ahmetsoy1903@gmail.com",
+//                "This is email subject",
+//                "This is email  body");
+        senderService.sendSimpleEmail(toEmail,
+                subject,
+                body);
+    }
+
+
+
+
 }
