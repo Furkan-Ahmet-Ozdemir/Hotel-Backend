@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.blackmirror.hotelbackend.utils.GeneratePNR.generateUniquePNR;
+
 
 @RestController
 public class ReservationController {
@@ -48,6 +50,8 @@ public class ReservationController {
         reservation.setCheckInDate(reservationRequest.getCheckInDate());
         reservation.setCheckOutDate(reservationRequest.getCheckOutDate());
         reservation.setCustomerCount(reservationRequest.getCustomerCount());
+        String PNR = generateUniquePNR();
+        reservation.setReservationCode(PNR);
         // HANDLE GUESTS
         // reservation.setGuestList(reservationRequest.getGuestList());
         // guestService.save(reservationRequest.getGuestList());
