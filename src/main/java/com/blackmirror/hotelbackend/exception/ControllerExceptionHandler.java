@@ -1,5 +1,6 @@
 package com.blackmirror.hotelbackend.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -65,15 +66,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
     }
 
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
-    @ExceptionHandler(DateFormatException.class)
-    public ResponseEntity<DefaultExceptionMessage> dateFormatException(DateFormatException e) {
-        DefaultExceptionMessage dex = new DefaultExceptionMessage();
-        dex.setCode(HttpStatus.PRECONDITION_FAILED.value());
-        dex.setMessage("Check given date format is not correct.");
-        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(dex);
-    }
 
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -88,14 +80,32 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<DefaultExceptionMessage> dateParseException(HttpMessageNotReadableException e) {
+    public ResponseEntity<DefaultExceptionMessage> dataParseException(HttpMessageNotReadableException e) {
         DefaultExceptionMessage dex = new DefaultExceptionMessage();
         dex.setCode(HttpStatus.BAD_REQUEST.value());
-        dex.setMessage("Check given date format.");
+        dex.setMessage("Data parse exception.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dex);
     }
 
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NullInvoiceException.class)
+    public ResponseEntity<DefaultExceptionMessage> nullInvoiceExceptionHandler(NullInvoiceException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.BAD_REQUEST.value());
+        dex.setMessage("Invoice information cannot be null.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dex);
+    }
 
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(LengthOfStayException.class)
+    public ResponseEntity<DefaultExceptionMessage> nullInvoiceExceptionHandler(LengthOfStayException e) {
+        DefaultExceptionMessage dex = new DefaultExceptionMessage();
+        dex.setCode(HttpStatus.BAD_REQUEST.value());
+        dex.setMessage("Select narrower date time period");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dex);
+    }
 
 
 

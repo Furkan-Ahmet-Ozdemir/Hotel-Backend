@@ -3,10 +3,7 @@ package com.blackmirror.hotelbackend.controller;
 import com.blackmirror.hotelbackend.dto.ReservationCreateRequest;
 import com.blackmirror.hotelbackend.dto.ReservationSearchRequest;
 import com.blackmirror.hotelbackend.entity.*;
-import com.blackmirror.hotelbackend.exception.DateConflictException;
-import com.blackmirror.hotelbackend.exception.DateFormatException;
-import com.blackmirror.hotelbackend.exception.GuestNotFoundException;
-import com.blackmirror.hotelbackend.exception.NoAvailableRoomException;
+import com.blackmirror.hotelbackend.exception.*;
 import com.blackmirror.hotelbackend.repository.GuestRepository;
 import com.blackmirror.hotelbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.blackmirror.hotelbackend.utils.GeneratePNR.generateUniquePNR;
+import static com.blackmirror.hotelbackend.utils.GetDateDayDifference.getDateDayDifference;
 
 
 @RestController
@@ -41,7 +39,7 @@ public class ReservationController {
     private InvoiceGuestService invoiceGuestService;
 
     @GetMapping("/reservations")
-    public List<Reservation> showReservations(Model model){
+    public List<Reservation> showReservations(){
         List<Reservation> listUsers = reservationService.listAll();
         return listUsers;
     }
@@ -49,6 +47,12 @@ public class ReservationController {
     @PostMapping("/reservations/save")
     public Reservation saveReservations(@RequestBody ReservationCreateRequest reservationRequest){
 
+        long lengthOfStay = getDateDayDifference(reservationRequest.getCheckInDate(),reservationRequest.getCheckOutDate());
+        int intValuelengthOfStay=0;
+
+
+        if(reservationRequest.getInvoiceGuest()==null)
+            throw new NullInvoiceException();
 
         int dateCompRes = reservationRequest.getCheckInDate().compareTo(reservationRequest.getCheckOutDate());
         if(dateCompRes > 0)
@@ -74,9 +78,21 @@ public class ReservationController {
                 reservationRequest.getCheckOutDate(),reservationRequest.getRoomTypeId());
         if(roomListAssignable.size()==0)
             throw new NoAvailableRoomException();
-        roomListToReservation.add(roomListAssignable.get(0));
+        Room roomToAssign =roomListAssignable.get(0);
+        roomListToReservation.add(roomToAssign);
 
         reservation.setRoomList(roomListToReservation);
+
+        try {
+            intValuelengthOfStay = Math.toIntExact(lengthOfStay);
+        } catch (ArithmeticException e) {
+            throw new LengthOfStayException();
+        }
+
+        reservation.setLenghtOfStay((int) lengthOfStay);
+        long roomPrice = roomToAssign.getRoomType().getPrice();
+        reservation.setPerDayPrice(roomPrice);
+        reservation.setTotalPrice(roomPrice*lengthOfStay);
 
 
         invoiceGuestService.save(reservation.getInvoiceGuest());
@@ -108,6 +124,14 @@ public class ReservationController {
 
 
    }
+    @GetMapping(value = "/getByPNR/{id}")
+    public Reservation getById(@PathVariable String id) {
+        Reservation res= reservationService.getByPNR(id);
+
+        return reservationService.getByPNR(id);
+    }
+
+
 
     public List<String> getAvailableRooms(Date date1, Date date2){
         List<String> reservedRoomList = reservationService.getFullRoomNumbers(date1,date2);
