@@ -53,8 +53,14 @@ public class ReservationController {
         long lengthOfStay = getDateDayDifference(reservationRequest.getCheckInDate(),reservationRequest.getCheckOutDate());
         int intValuelengthOfStay=0;
 
+        InvoiceGuest invoiceGuest = new InvoiceGuest();
+        invoiceGuest.setEmail(reservationRequest.getEmail());
+        invoiceGuest.setTc(reservationRequest.getTc());
+        invoiceGuest.setName(reservationRequest.getName());
+        invoiceGuest.setSurName(reservationRequest.getSurName());
+        invoiceGuest.setPhoneNumber(reservationRequest.getPhoneNumber());
 
-        if(reservationRequest.getInvoiceGuest()==null)
+        if(invoiceGuest==null)
             throw new NullInvoiceException();
 
         int dateCompRes = reservationRequest.getCheckInDate().compareTo(reservationRequest.getCheckOutDate());
@@ -75,12 +81,12 @@ public class ReservationController {
         List<Guest> guestList =guestService.listAll();
         reservation.setGuestList(guestList);
         ///HANDLE GUESTS ABOVE IS JUST PLACEHOLDER
-        reservation.setInvoiceGuest(reservationRequest.getInvoiceGuest());
+        reservation.setInvoiceGuest(invoiceGuest);
         List<Room> roomListToReservation =new ArrayList<>();
         List<Room> roomListAssignable = availableRoomsToAssignRoomtype(reservationRequest.getCheckInDate(),
                 reservationRequest.getCheckOutDate(),reservationRequest.getRoomTypeId());
-        if(roomListAssignable.size()==0)
-            throw new NoAvailableRoomException();
+//        if(roomListAssignable.size()==0)
+//            throw new NoAvailableRoomException();
         Room roomToAssign =roomListAssignable.get(0);
         roomListToReservation.add(roomToAssign);
 
