@@ -28,15 +28,14 @@ public class Reservation {
     @JoinColumn(name = "guestList")
     private List<Guest> guestList;
 
-    @OneToMany
-    @JoinColumn(name = "reservationId")
-    private List<Room> roomList;
+    @ManyToOne
+    private Room room;
 
     @OneToOne
     @JoinColumn(name = "invoiceGuestId")
     private InvoiceGuest invoiceGuest;
 
-    private boolean status = false;
+    private boolean status = true;
 
     private String reservationCode;
 

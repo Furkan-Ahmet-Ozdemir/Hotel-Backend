@@ -76,15 +76,15 @@ public class ReservationController {
         reservation.setGuestList(guestList);
         ///HANDLE GUESTS ABOVE IS JUST PLACEHOLDER
         reservation.setInvoiceGuest(reservationRequest.getInvoiceGuest());
-        List<Room> roomListToReservation =new ArrayList<>();
+
         List<Room> roomListAssignable = availableRoomsToAssignRoomtype(reservationRequest.getCheckInDate(),
                 reservationRequest.getCheckOutDate(),reservationRequest.getRoomTypeId());
         if(roomListAssignable.size()==0)
             throw new NoAvailableRoomException();
         Room roomToAssign =roomListAssignable.get(0);
-        roomListToReservation.add(roomToAssign);
 
-        reservation.setRoomList(roomListToReservation);
+
+        reservation.setRoom(roomToAssign);
 
         try {
             intValuelengthOfStay = Math.toIntExact(lengthOfStay);
@@ -103,7 +103,7 @@ public class ReservationController {
 
         RoomsBooked roomsBooked = new RoomsBooked();
 
-        sendMail(/*reservation.getInvoiceGuest().getEmail()*/"furkan844.faz@gmail.com",  "Reservation Code: "+reservation.getReservationCode()
+        sendMail(reservation.getInvoiceGuest().getEmail(),  "Reservation Code: "+reservation.getReservationCode()
                 ,"Rezervasyon kodunuz ile rezervasyonu inceleyebilir ve isterseniz sitemiz üzerinden iptal edebilirsiniz");
 
         return reservationRes;
@@ -138,6 +138,15 @@ public class ReservationController {
         Reservation res= reservationService.getByPNR(id);
 
         return reservationService.getByPNR(id);
+    }
+
+    @GetMapping(value = "/deactivateByPNR/{id}")
+    public Reservation deactivateByPNR(@PathVariable String id) {
+        Reservation res= reservationService.getByPNR(id);
+
+        res.setStatus(false);
+        Reservation resLast = reservationService.save(res);
+        return resLast;
     }
 
 
