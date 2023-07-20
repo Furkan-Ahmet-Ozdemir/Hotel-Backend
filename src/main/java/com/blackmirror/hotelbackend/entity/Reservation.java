@@ -29,7 +29,7 @@ public class Reservation {
     private List<Guest> guestList;
 
     @OneToMany
-    @JoinColumn(name = "roomList")
+    @JoinColumn(name = "reservationId")
     private List<Room> roomList;
 
     @OneToOne

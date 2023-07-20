@@ -36,6 +36,9 @@ public class ReservationController {
     private RoomTypeService roomTypeService;
 
     @Autowired
+    private EmailSenderService senderService;
+
+    @Autowired
     private InvoiceGuestService invoiceGuestService;
 
     @GetMapping("/reservations")
@@ -94,9 +97,15 @@ public class ReservationController {
         reservation.setPerDayPrice(roomPrice);
         reservation.setTotalPrice(roomPrice*lengthOfStay);
 
-
         invoiceGuestService.save(reservation.getInvoiceGuest());
+
         Reservation reservationRes = reservationService.save(reservation);
+
+        RoomsBooked roomsBooked = new RoomsBooked();
+
+        sendMail(/*reservation.getInvoiceGuest().getEmail()*/"furkan844.faz@gmail.com",  "Reservation Code: "+reservation.getReservationCode()
+                ,"Rezervasyon kodunuz ile rezervasyonu inceleyebilir ve isterseniz sitemiz üzerinden iptal edebilirsiniz");
+
         return reservationRes;
     }
 
@@ -160,4 +169,14 @@ public class ReservationController {
 
         return matchingRoom;
     }
+
+    public void sendMail(String toEmail,String subject,String body) {
+//        senderService.sendSimpleEmail("ahmetsoy1903@gmail.com",
+//                "This is email subject",
+//                "This is email  body");
+        senderService.sendSimpleEmail(toEmail,
+                subject,
+                body);
+    }
+
 }
