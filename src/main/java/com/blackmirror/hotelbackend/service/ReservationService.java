@@ -65,8 +65,9 @@ public class ReservationService {
             dateToTravel = c.getTime();
             
             for(Reservation res: reservationTravel){
-                Room roomToAdd = res.getRoom();
-                roomList.add(roomToAdd.getRoomNumber());
+                List<Room> rooms = res.getRoomList();
+                for (Room room:rooms)
+                {roomList.add(room.getRoomNumber());}
             }
 
         }

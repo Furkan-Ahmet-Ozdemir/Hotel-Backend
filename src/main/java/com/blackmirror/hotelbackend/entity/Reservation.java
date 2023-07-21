@@ -24,19 +24,13 @@ public class Reservation {
     private int lenghtOfStay;
     private int customerCount;
 
-    private String name;
-    private String surName;
-    private String phoneNumber;
-    private String tc;
-    private String email;
-
     @OneToMany
     @JoinColumn(name = "guestList")
     private List<Guest> guestList;
 
-    @ManyToOne
-    private Room room;
-
+    @OneToMany
+    @JoinColumn(name = "reservationId")
+    private List<Room> roomList;
     @OneToOne
     @JoinColumn(name = "invoiceGuestId")
     private InvoiceGuest invoiceGuest;
@@ -45,4 +39,7 @@ public class Reservation {
 
     private String reservationCode;
 
+
+    @ManyToOne
+    private Room room;
 }

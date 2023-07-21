@@ -5,6 +5,7 @@ import com.blackmirror.hotelbackend.dto.ReservationSearchRequest;
 import com.blackmirror.hotelbackend.entity.*;
 import com.blackmirror.hotelbackend.exception.*;
 import com.blackmirror.hotelbackend.repository.GuestRepository;
+import com.blackmirror.hotelbackend.repository.InvoiceGuestRepository;
 import com.blackmirror.hotelbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -40,6 +41,8 @@ public class ReservationController {
 
     @Autowired
     private InvoiceGuestService invoiceGuestService;
+    @Autowired
+    private InvoiceGuestRepository ınvoiceGuestRepository;
 
     @GetMapping("/reservations")
     public List<Reservation> showReservations(){
@@ -59,6 +62,7 @@ public class ReservationController {
         invoiceGuest.setName(reservationRequest.getName());
         invoiceGuest.setSurName(reservationRequest.getSurName());
         invoiceGuest.setPhoneNumber(reservationRequest.getPhoneNumber());
+        ınvoiceGuestRepository.save(invoiceGuest);
 
         if(invoiceGuest==null)
             throw new NullInvoiceException();
@@ -85,8 +89,8 @@ public class ReservationController {
         List<Room> roomListToReservation =new ArrayList<>();
         List<Room> roomListAssignable = availableRoomsToAssignRoomtype(reservationRequest.getCheckInDate(),
                 reservationRequest.getCheckOutDate(),reservationRequest.getRoomTypeId());
-//        if(roomListAssignable.size()==0)
-//            throw new NoAvailableRoomException();
+        if(roomListAssignable.size()==0)
+            throw new NoAvailableRoomException();
         Room roomToAssign =roomListAssignable.get(0);
         roomListToReservation.add(roomToAssign);
 
